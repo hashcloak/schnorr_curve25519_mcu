@@ -5,6 +5,8 @@
 
 #include "curve25519_helper.c"
 
+#include "sha256/sha256.c"
+
 #define LED_PIN  25 // GPIO of built-in LED
 
 // Just for testing, not suitable for cryptography
@@ -29,6 +31,10 @@ void get_random_data(uint8_t *buf, uint16_t len) {
     }
 }
 
+void sha256(const unsigned char *input, size_t ilen, unsigned char output[32]) {
+    mbedtls_sha256(input, ilen, output, 0);
+}
+
 // Testing https://www.rfc-editor.org/rfc/rfc8235.html#section-3.2
 int main()
 {
@@ -41,36 +47,37 @@ int main()
     // sleep_ms(1000);
     
     while(true) {
+      // PREP: priv/pub keys
+
       // Alice generates 32 random bytes
       // this gets set as secret key (clamping in helper file)
       uint8_t secret_key_a[32];
       get_random_data(secret_key_a, 32);
-      // Store in flash memory (raw data for now, should be different)
-      set_secretkey(secret_key_a);
 
-      // 1. Alice chooses v
-      uint8_t v[32];
-      get_random_data(v, 32);
-      // TODO this might be out of range
+      // WORKS this tests testvectors
+      // puts(mbedtls_sha256_self_test(secret_key_a[0]));
+      uint8_t hashed_secret_key_a[32];
+      
+      // WORKS This does 1 hash
+      mbedtls_sha256(secret_key_a, 32, hashed_secret_key_a, 0);
+      puts(hashed_secret_key_a);
 
-      // 2. Bob chooses a challenge c
-      uint8_t c[32];
-      get_random_data(c, 32);
+//       // Store in flash memory (raw data for now, should be different)
+//       set_secretkey(secret_key_a);
+//       uint8_t* a = get_secret_key();
 
-      // 3. Alice computes r = v - a * c mod n
-      unsigned char e1[32] = {3};
-      unsigned char basepoint_G[32] = {9};
+// // x coordinate 9
+//       unsigned char basepoint_G[32] = {9};
+//       uint8_t pubkey[32];
+//       get_pubkey(pubkey, basepoint_G);
 
-      // gpio_put(LED_PIN, 0);
-      // printf("OFF\n");
-      sleep_ms(1000);
 
-      puts("Hello, world!");
+      // puts("Hello, world!");
 
-      uint8_t randomness[32];
-      get_random_data(randomness, 32);
+      // uint8_t randomness[32];
+      // get_random_data(randomness, 32);
 
-      puts(randomness);
+      // puts(randomness);
 
       // gpio_put(LED_PIN, 1);
       // printf("ON\n");

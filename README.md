@@ -6,7 +6,21 @@ Source code curve25519: [repo](https://github.com/skeeto/enchive/blob/master/src
 
 Test code is based on: [repo](https://github.com/agl/curve25519-donna/blob/master/test-curve25519.c)
 
-Additionally for testing purposes, randomness is generated. This is not suitable for cryptography purposes and only for testing. This code comes from https://forums.raspberrypi.com//viewtopic.php?f=145&t=302960. 
+
+
+## Development Sources
+
+### Curve25519
+
+The curve25519 implementation comes from [curve25519-donna](https://github.com/skeeto/enchive/blob/master/src/curve25519-donna.c) (Adam Langley), who in turn based their code on Dan Bernstein's original implementation of curve25519. 
+
+### Randomness
+
+For testing purposes, randomness is generated. This is not suitable for cryptography purposes and only for testing. This code comes from https://forums.raspberrypi.com//viewtopic.php?f=145&t=302960. 
+
+### SHA256
+
+The SHA256 hashing functionality is extracted from [mbed TLS](https://github.com/wolfeidau/mbedtls/tree/master). 
 
 ## Preparation
 
